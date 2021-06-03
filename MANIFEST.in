@@ -1,0 +1,1 @@
+recursive-include baklava/resources *.json *.jinja2 Dockerfile *.py *.conf *.in

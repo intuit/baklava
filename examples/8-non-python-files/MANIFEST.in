@@ -1,0 +1,3 @@
+include requirements.txt
+include dockerlines.txt
+include non_python_files/resources/thresholds.json
