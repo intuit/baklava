@@ -18,6 +18,7 @@ setup(
     install_requires=[
         'docker>=2.0.0',   # Earliest with compatible `docker.from_env` API
         'appdirs>=1.4.0',  # First version compatible with current pip paths
+        'six>=1.16.0'
     ],
     entry_points={
         'distutils.commands': [
