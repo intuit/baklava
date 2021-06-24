@@ -1,4 +1,8 @@
-# Baklava
+<p align="center">
+ <img src=".github/assets/images/baklava-logo.png">
+</p>
+
+<h1 align="center">Baklava</h1>
 
 This is a package for building python based Machine Learning models into docker images, that can be deployed directly into AWS SageMaker.
 
