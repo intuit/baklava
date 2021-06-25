@@ -9,7 +9,7 @@ setup(
     },
     maintainer='Intuit ML Platform',
     maintainer_email='baklava-maintainers@intuit.com',
-    url='github.com/intuit/baklava',
+    url='https://github.com/intuit/baklava',
     packages=find_packages(),
     include_package_data=True,
     setup_requires=[
