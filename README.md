@@ -276,3 +276,6 @@ be built:
 python setup.py predict
 python setup.py train
 ```
+
+# Contributing
+For information on how to contribute to `baklava`, please read through the [contributing guidelines](./CONTRIBUTING.md).
