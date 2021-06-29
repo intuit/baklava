@@ -36,11 +36,10 @@ def main():
 
     Note: This is the training entrypoint used by baklava!
     """
-    paths.init()
+    paths.initTraining()
     # Read in the training data
-    path = paths.input('training', 'data.csv')
-    data = pd.read_csv(path)
-
+    data = paths.inputAsDataframe('training')
+    print(data)
     # Extract features and labels
     x = data[['age', 'height']]
     y = data['weight']
