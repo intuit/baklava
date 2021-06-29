@@ -22,6 +22,7 @@ def load_model():
     Returns:
         model (sklearn.tree.DecisionTreeClassifier): The trained decision tree.
     """
+    paths.initPrediction()
     with open(paths.model('model.pkl'), 'rb') as stream:
         return pickle.load(stream)
 
@@ -42,17 +43,23 @@ def main(payload):
         payload (dict[str, object]): The output of the function is expected to
             be either a dictionary (like the function input) or a JSON string.
     """
-
-    # Extract parameters from input dictionary
-    age = payload['age']
-    height = payload['height']
-
     # Load the model and execute
     model = load_model()
-    x = np.array([[age, height]])  # Model expects matrix
-    weights = model.predict(x)
-    weight = int(weights[0])  # Model produces vector
 
+    predictions = []
+    for instance in payload['instances']:
+    # Extract parameters from input dictionary
+        age = instance['age']
+        height = instance['height']
+
+    
+        x = np.array([[age, height]])  # Model expects matrix
+        weights = model.predict(x)
+        weight = int(weights[0])  # Model produces vector
+
+        predictions.append({'weight': weight})
     # Return back a payload with the result
-    result = {'weight': weight}
+    result = {'predictions': predictions,
+        'deployedModelId': paths.modelId()
+    }
     return result
