@@ -278,4 +278,4 @@ python setup.py train
 ```
 
 # Contributing
-For information on how to contribute to `baklava`, please read through the [contributing guidelines](./CONTRIBUTING.md).
+For information on how to contribute to `baklava`, please read through the [contributing guidelines](./.github/CONTRIBUTING.md).
