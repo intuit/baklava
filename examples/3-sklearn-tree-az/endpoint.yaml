@@ -1,0 +1,41 @@
+# yaml-language-server: $schema: https://azuremlsdk2.blob.core.windows.net/latest/managedOnlineEndpoint.schema.json
+name: sklearn-endpoint
+type: online
+auth_mode: key
+traffic:
+  sklearn: 100
+
+deployments:
+  - name: sklearn
+    model:
+      name: sklearn_1
+      version: 1
+      # path: https://mlctldata.blob.core.windows.net/modelartifact/model.pkl
+      local_path: ./data/model
+    code_configuration:
+      code: 
+        local_path: ./sklearn_tree/
+      scoring_script: predict.py
+    environment_variables:
+      MODEL_BASE_PATH: /opt/ml/model
+    environment:
+      name: sklearn
+      version: 1
+      docker:
+        image: mlctl.azurecr.io/mlctl/predict-image:latest
+      inference_config:
+        liveness_route:
+          port: 8080
+          path: /ping
+        readiness_route:
+          port: 8080
+          path: /ping
+        scoring_route:
+          port: 8080
+          path: /invocations
+    instance_type: Standard_DS2_v2
+    scale_settings:
+      scale_type: manual
+      instance_count: 1
+      min_instances: 1
+      max_instances: 1

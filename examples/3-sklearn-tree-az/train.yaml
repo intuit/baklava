@@ -1,0 +1,34 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+# code: 
+#   local_path: ./dist
+command: >-
+  python /opt/main.py --set
+  training-data={inputs.training} 
+  validation-data={inputs.validation}
+  testing-data={inputs.testing}
+inputs:
+  training:
+    data:
+      path: https://mlctldata.blob.core.windows.net/modeldata/data.csv
+    mode: mount
+  validation:
+    data:
+      path: https://mlctldata.blob.core.windows.net/modeldata/data.csv
+    mode: mount
+  testing:
+    data:
+      path: https://mlctldata.blob.core.windows.net/modeldata/data.csv
+    mode: mount
+environment: 
+  name: sklearn-train
+  version: 1
+  docker:
+    image: mlctl.azurecr.io/mlctl/train-image:latest
+    # image: docker.io/python:3.6-slim
+
+
+compute:
+  # target: local
+  target: azureml:/subscriptions/c24881db-d5d4-482e-b582-d17f74d863ef/resourceGroups/mlctl/providers/Microsoft.MachineLearningServices/workspaces/mlctl-test/computes/mlctl-test
+experiment_name: sk_learn_mlctl
+description: Train a sklearn model using mlctl.
