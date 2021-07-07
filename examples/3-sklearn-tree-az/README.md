@@ -50,6 +50,7 @@ Usage
     docker run                                           \
     -p 8080:8080                                         \
     -v $(pwd)/data/model/:/opt/ml/model/                 \
+    -e AZUREML_MODEL_DIR=/opt/ml/model/ \
     predict-image
     ```
 
@@ -74,7 +75,7 @@ Usage
     {"success": true}
     ```
 
-    az ml endpoint create --name sklearnendpoint -f endpoint.yaml  --resource-group mlctl --workspace-name mlctl-test --web
+    az ml endpoint create --name sklearnendpoint -f endpoint.yaml  --resource-group mlctl --workspace-name mlctl-test
 
 
 6. The prediction function defined in the `setup.py` can be run by
@@ -85,7 +86,7 @@ Usage
     curl                                        \
     --header "Content-Type: application/json"   \
     --request POST                              \
-    --data '{"age": 35, "height": 182}'         \
+    --data '{"instances":[{"age": 35, "height": 182}]}'         \
     http://localhost:8080/invocations
     ```
 

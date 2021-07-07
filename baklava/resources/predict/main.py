@@ -130,7 +130,7 @@ def application(func):
                           default: 1
         """
 
-        if request.content_type == 'application/json':
+        if request.is_json:
             data = request.get_json()  # type: dict[str, object]
         else:
             data = request.get_data()  # type: bytes

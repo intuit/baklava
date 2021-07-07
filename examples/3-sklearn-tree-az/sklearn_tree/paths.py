@@ -162,8 +162,9 @@ def output(filename):
     Returns:
         path (str): The absolute path to the model output directory
     """
-    Path('/.outputs/model').mkdir(parents=True, exist_ok=True)
-    return os.path.join(os.sep, '.outputs', 'model', filename)
+    cwd = os.getcwd()
+    Path('./outputs/model').mkdir(parents=True, exist_ok=True)
+    return os.path.join(cwd, 'outputs', 'model', filename)
 
 def outputUpload():
     """
@@ -252,17 +253,7 @@ def initPrediction():
     """
     Make folder paths for models and download from GS
     """
-    Path('/opt/ml/model/').mkdir(parents=True, exist_ok=True)
 
-    storage_client = storage.Client()
-
-    bucket_name = os.getenv('AIP_STORAGE_URI')
-    bucket = storage_client.bucket(bucket_name)
-    # blob = bucket.blob('model.pkl')
-    artifact = f'{bucket_name}/model.pkl'
-    print(f'GS Artifact location: {artifact}')
-    blob = Blob.from_string(artifact, storage_client)
-    blob.download_to_filename('/opt/ml/model/model.pkl')
 
 def containerPort():
     return os.getenv('AIP_HTTP_PORT')
