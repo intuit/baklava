@@ -86,7 +86,7 @@ Usage
     curl                                        \
     --header "Content-Type: application/json"   \
     --request POST                              \
-    --data '{"age": 35, "height": 182}'         \
+    --data '{"instances":[{"age": 35, "height": 182}]}'         \
     http://localhost:8080/invocations
     ```
 

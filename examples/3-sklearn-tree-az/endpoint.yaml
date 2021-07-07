@@ -8,16 +8,17 @@ traffic:
 deployments:
   - name: sklearn
     model:
-      name: sklearn_1
+      name: sklearn_model4
       version: 1
       # path: https://mlctldata.blob.core.windows.net/modelartifact/model.pkl
-      local_path: ./data/model
+      local_path: ./data/model/model.pkl
     code_configuration:
       code: 
         local_path: ./sklearn_tree/
       scoring_script: predict.py
     environment_variables:
-      MODEL_BASE_PATH: /opt/ml/model
+      # https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-custom-container#locating-the-mounted-model
+      AZUREML_MODEL_DIR: /var/azureml-app/azureml-models/sklearn_model4/1
     environment:
       name: sklearn
       version: 1

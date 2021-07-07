@@ -44,7 +44,7 @@ def main(payload):
             be either a dictionary (like the function input) or a JSON string.
     """
     # Load the model and execute
-    model = load_model()
+    model = init()
 
     predictions = []
     for instance in payload['instances']:
