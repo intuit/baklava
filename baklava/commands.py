@@ -8,7 +8,6 @@ distributions.
 from distutils.core import Command
 import os
 
-
 from baklava import images, entrypoint, distribution
 
 
@@ -54,6 +53,7 @@ class Train(Docker):
 
         # Distribution Configs
         ('entrypoint=', 'e', "The project entrypoint"),
+        ('provider=', 'p', "The provider this container should be built for"),
 
         # Docker Configs
         ('idfile=', 'f', "Save image name to the given file"),
@@ -69,6 +69,7 @@ class Train(Docker):
         # Distribution Configs
         self.entrypoint = None
         self.pyver = None
+        self.provider = None
 
         # Docker Configs
         self.idfile = None
@@ -114,7 +115,8 @@ class Train(Docker):
             entrypoint=entry,
             requirements=requirements,
             python_version=python_version,
-            dockerlines=dockerlines
+            dockerlines=dockerlines,
+            provider=self.provider
         )
 
         self.build(artifacts, entry, directory)
@@ -128,6 +130,7 @@ class Predict(Docker):
         ('entrypoint=', 'e', "The project entrypoint"),
         ('initializer=', 'n', "The project initializer"),
         ('workers=', 'e', "The number of worker processes host in the image (default=8)"),
+        ('provider=', 'p', "The provider to create this container for"),
 
         # Image Configs
         ('idfile=', 'f', "Save image name to the given file"),
@@ -144,6 +147,7 @@ class Predict(Docker):
         self.entrypoint = None
         self.initializer = None
         self.workers = None
+        self.provider = None
 
         # Docker Configs
         self.idfile = None
@@ -200,6 +204,7 @@ class Predict(Docker):
             initializer=initializer,
             python_version=python_version,
             dockerlines=dockerlines,
+            provider=self.provider,
             workers=self.workers
         )
 
