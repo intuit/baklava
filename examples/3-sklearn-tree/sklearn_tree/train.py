@@ -10,9 +10,6 @@ import pickle
 import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
 
-from sklearn_tree import paths
-
-
 def train(x, y):
     """
     Train a decision tree regressor using a floating point feature matrix and
@@ -30,16 +27,15 @@ def train(x, y):
     return model
 
 
-def main():
+def main(ta):
     """
     Load features and labels, train the tree, and serialize model artifact.
 
     Note: This is the training entrypoint used by baklava!
     """
     # Read in the training data
-    path = paths.input('training', 'data.csv')
-    data = pd.read_csv(path)
-
+    data = ta.input_as_dataframe(channel='training')
+    print(data)
     # Extract features and labels
     x = data[['age', 'height']]
     y = data['weight']
@@ -48,7 +44,8 @@ def main():
     model = train(x, y)
 
     # Save model object using pickle format
-    with open(paths.output('model.pkl'), 'wb') as stream:
+    with open(ta.log_artifact(filename='model.pkl'), 'wb') as stream:
         pickle.dump(model, stream)
 
     print('Success!')
+

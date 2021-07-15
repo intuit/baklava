@@ -5,7 +5,7 @@ command: >-
   python /opt/main.py --set
   training-data={inputs.training} 
   validation-data={inputs.validation}
-  testing-data={inputs.testing}
+  testing-data={inputs.testing} sriracha_provider=azureml
 inputs:
   training:
     data:
@@ -29,6 +29,6 @@ environment:
 
 compute:
   # target: local
-  target: azureml:/subscriptions/c24881db-d5d4-482e-b582-d17f74d863ef/resourceGroups/mlctl/providers/Microsoft.MachineLearningServices/workspaces/mlctl-test/computes/mlctl-test
+  target: [target cluster to use]
 experiment_name: sk_learn_mlctl
 description: Train a sklearn model using mlctl.
