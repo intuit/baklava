@@ -14,6 +14,7 @@ import psutil
 from flask import Flask, request
 import gunicorn.app.base
 
+from mlctlsriracha.predict import PredictAdapter
 
 # ------------------------------------------------------------------------------
 # Logging
@@ -69,7 +70,7 @@ def application(func):
     else:
         spec = inspect.getfullargspec(func)
 
-    if len(spec.args) != 1:
+    if len(spec.args) != 2:
         raise ValueError(
             'Expected method to have exactly 1 argument, got {} arguments: {}'
             .format(len(spec.args), spec.args)
@@ -135,8 +136,11 @@ def application(func):
         else:
             data = request.get_data()  # type: bytes
 
+        # Create prediction adapter
+        pa = PredictAdapter(os.getenv('sriracha_provider'))
+
         # Execute lambda
-        result = func(data)
+        result = func(pa, data)
         return result
 
     @app.route('/ping', methods=['GET'])

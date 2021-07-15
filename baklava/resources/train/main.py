@@ -1,17 +1,18 @@
 $entrypoint
 import argparse
 import os
+from mlctlsriracha.training import TrainingAdapter
 
 print('Starting mlctl container')
 
 parser = argparse.ArgumentParser(
                 description='Accept general args.'
                 )
-
+                
 # https://gist.github.com/fralau/061a4f6c13251367ef1d9a9a99fb3e8d
 parser.add_argument("--set",
     metavar="KEY=VALUE",
-    nargs='+',
+    nargs='*',
     help="Set a number of key-value pairs "
         "(do not put spaces before or after the = sign). "
         "If a value contains spaces, you should define "
@@ -19,7 +20,7 @@ parser.add_argument("--set",
         'foo="this is a sentence". Note that '
         "values are always treated as strings.")
 
-args = parser.parse_args()
+args, remainder = parser.parse_known_args()
 
 def parse_var(s):
     """
@@ -51,15 +52,22 @@ def parse_vars(items):
             d[key] = value
     return d
 
-# parse the key-value pairs
-param_values = parse_vars(args.set)
+if args.set is not None:
+    # parse the key-value pairs
+    param_values = parse_vars(args.set)
 
-print(f'params= {param_values}')
-data_fields = ['training-data', 'validation-data', 'test-data']
-for data_field in data_fields:
-    if data_field in param_values.keys():
-        print(f'{data_field}={param_values[data_field]} found in params')
-        os.environ[data_field] = param_values[data_field]
+    print(f'params= {param_values}')
+    data_fields = [
+        # mlctl specific
+        'sriracha_provider', 
+        # Azure ML specific
+        'training-data', 'validation-data', 'test-data']
+    for data_field in data_fields:
+        if data_field in param_values.keys():
+            print(f'{data_field}={param_values[data_field]} found in params')
+            os.environ[data_field] = param_values[data_field]
 
-entrypoint()
-
+# create training adapter env
+ta = TrainingAdapter(os.getenv('sriracha_provider'))
+entrypoint(ta)
+ta.finish()

@@ -7,7 +7,7 @@
 FROM python:$python_version-slim
 
 # Define image entry
-ENTRYPOINT ["python", "/opt/main.py"]
+$containerentrypoint
 
 # Set up environment
 ENV PIP_INDEX_URL="$pip_index_url" \
