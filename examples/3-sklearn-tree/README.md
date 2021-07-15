@@ -25,11 +25,33 @@ Usage
     python setup.py train -t train-image
     ```
     ```
-    docker run                                           \
-    -v $(pwd)/data/train/:/opt/ml/input/data/training/   \
-    -v $(pwd)/data/model/:/opt/ml/model/                 \
-    train-image
+    docker run -entrypoint="python /opt/main.py --set training-data='https://mlctldata.blob.core.windows.net/modeldata/data.csv'" train-image
     ```
+
+    <!-- Doesn't work easily because requires pip install code package -->
+    Local Hosting w/o container
+    python3 ./dist/main.py --set
+    training-data=./data/train \
+    sriracha_provider=azureml \
+
+
+    Local Interactive Docker experience
+    docker run -it \
+    -v $(pwd)/data/train/:/opt/ml/input/data/training \
+    -v $(pwd)/data/model/:/outputs \
+    -e training-data=/opt/ml/input/data/training/data.csv \
+    -e sriracha_provider=azureml \
+    --entrypoint="/bin/bash" train-image 
+
+    docker run  \
+    -v $(pwd)/data/train/:/opt/ml/input/data/training \
+    -v $(pwd)/data/model/:/outputs \
+    -e training-data=/opt/ml/input/data/training/data.csv \
+    -e sriracha_provider=azureml \
+    train-image 
+
+    az ml job create -f train.yaml --web --resource-group mlctl --workspace-name mlctl-test
+
 
     This will generate a `model.pkl` file in the `data/model/` folder.
 
@@ -42,6 +64,8 @@ Usage
     docker run                                           \
     -p 8080:8080                                         \
     -v $(pwd)/data/model/:/opt/ml/model/                 \
+    -e AZUREML_MODEL_DIR=/opt/ml/model/ \
+    -e sriracha_provider=azureml \
     predict-image
     ```
 
@@ -66,6 +90,9 @@ Usage
     {"success": true}
     ```
 
+    az ml endpoint create --name sklearnendpoint -f endpoint.yaml  --resource-group mlctl --workspace-name mlctl-test
+
+
 6. The prediction function defined in the `setup.py` can be run by
    accessing the `invocations` route. In another terminal, execute
    a `POST` request to the `invocations` route using `curl`:
@@ -74,7 +101,7 @@ Usage
     curl                                        \
     --header "Content-Type: application/json"   \
     --request POST                              \
-    --data '{"age": 35, "height": 182}'         \
+    --data '{"instances":[{"age": 35, "height": 182}]}'         \
     http://localhost:8080/invocations
     ```
 
@@ -84,3 +111,13 @@ Usage
     ```
     {"weight": 172}
     ```
+
+
+AWS Container Build
+
+docker run  \
+    -v $(pwd)/data/train/:/opt/ml/input/data/training \
+    -v $(pwd)/data/model/:/outputs \
+    -e training-data=/opt/ml/input/data/training/data.csv \
+    -e sriracha_provider=awssagemaker \
+    train-image 

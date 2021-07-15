@@ -20,7 +20,7 @@ def create_training_job(
                 "containerSpec": {
                     # A working docker image can be found at gs://cloud-samples-data/ai-platform/mnist_tfrecord/custom_job
                     "imageUri": container_image,
-                    "env": [
+                    "env": [{"name": "sriracha_provider", "value": "gcpvertex"}
                     ],
                 },
             }
