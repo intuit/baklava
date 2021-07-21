@@ -1,7 +1,7 @@
 $entrypoint
 import argparse
 import os
-from mlctlsriracha.training import TrainingAdapter
+from mlsriracha.training import TrainingAdapter
 
 print('Starting mlctl container')
 
@@ -61,7 +61,7 @@ if args.set is not None:
         # mlctl specific
         'sriracha_provider', 
         # Azure ML specific
-        'training-data', 'validation-data', 'test-data']
+        'training-data', 'validation-data', 'test-data', 'sriracha_mlflow_tracking_uri']
     for data_field in data_fields:
         if data_field in param_values.keys():
             print(f'{data_field}={param_values[data_field]} found in params')
@@ -69,5 +69,9 @@ if args.set is not None:
 
 # create training adapter env
 ta = TrainingAdapter(os.getenv('sriracha_provider'))
-entrypoint(ta)
-ta.finish()
+try:
+    entrypoint(ta)
+    ta.finish()
+except TypeError:
+    print('User provided function does not support TrainingAdapter')
+    entrypoint()
