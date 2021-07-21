@@ -21,6 +21,7 @@ def format_containerentrypoint(job_type, provider):
     Returns:
         dockerlines (str): The block of dockerlines to insert into the template
     """
+
     if job_type == 'train' and provider == 'azureml':
         print('Swapping container entrypoint for AzureML')
         return ""
@@ -80,10 +81,11 @@ def build_parameters(archive, entrypoint, requirements, python_version, dockerli
         python_version = environment.get_python_version()
 
     # Make sure to generate the rgiht containerentrypoint
-    containerentrypoint = format_containerentrypoint(provider, job_type)
+    containerentrypoint = format_containerentrypoint(job_type=job_type, provider=provider)
 
     # Make sure dockerlines are properly formatted
     dockerlines = format_dockerlines(dockerlines)
+    requirements.append("mlsriracha>=0.0.1")
     requirements = format_requirements(requirements)
     entrypoint = format_entrypoints(entrypoint, 'entrypoint')
 

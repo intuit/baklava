@@ -14,7 +14,7 @@ import psutil
 from flask import Flask, request
 import gunicorn.app.base
 
-from mlctlsriracha.predict import PredictAdapter
+from mlsriracha.predict import PredictAdapter
 
 # ------------------------------------------------------------------------------
 # Logging
@@ -140,7 +140,11 @@ def application(func):
         pa = PredictAdapter(os.getenv('sriracha_provider'))
 
         # Execute lambda
-        result = func(pa, data)
+        try:
+            result = func(pa, data)
+        except TypeError:
+            # print('User provided function does not support PredictAdapter')
+            result = func(data)
         return result
 
     @app.route('/ping', methods=['GET'])
