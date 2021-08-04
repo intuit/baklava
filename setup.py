@@ -29,6 +29,7 @@ setup(
     ],
     entry_points={
         'distutils.commands': [
+            'processing = baklava.commands:Processing',
             'train = baklava.commands:Train',
             'execute = baklava.commands:Train',
             'predict = baklava.commands:Predict',
