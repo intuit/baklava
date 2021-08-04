@@ -128,6 +128,33 @@ def train(path, archive, entrypoint, requirements, python_version, dockerlines, 
     files.append(os.path.join(path, archive))
     return files
 
+def processing(path, archive, entrypoint, requirements, python_version, dockerlines, provider):
+    """
+    Create docker-specific training image artifacts
+
+    Args:
+        path (str): The directory to the distribution path to save artifacts to
+        archive (str): The path to the source distribution
+        entrypoint (str): The package entrypoint
+        requirements (list[str]): The list of package requirements
+        python_version (str): The specific version of python to use
+        dockerlines (Union[str, list[str]]): Dockerlines provided by setup file
+
+    Returns:
+        artifacts (list[str]): The collection of artifacts used to create a
+            training image.
+    """
+    # Common parameters
+    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, 'processing')
+
+    # Render the result
+    src = pkg_resources.resource_filename('baklava.resources', 'processing')
+    files = render.copy(src, path, **parameters)
+
+    # Return all distribution files
+    files.append(os.path.join(path, archive))
+    return files
+
 
 def predict(path, archive, entrypoint, requirements, initializer, python_version, dockerlines, provider, workers=8):
     """
