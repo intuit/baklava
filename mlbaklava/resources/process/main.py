@@ -1,7 +1,7 @@
 $entrypoint
 import argparse
 import os
-from mlsriracha.training import TrainingAdapter
+from mlsriracha.process import ProcessAdapter
 
 print('Starting mlctl container')
 
@@ -61,18 +61,18 @@ if args.set is not None:
         # mlctl specific
         'sriracha_provider', 
         # Azure ML specific
-        'training-data', 'validation-data', 'test-data', 'sriracha_mlflow_tracking_uri']
+        'input-data', 'sriracha_mlflow_tracking_uri']
     for data_field in data_fields:
         if data_field in param_values.keys():
             print(f'{data_field}={param_values[data_field]} found in params')
             os.environ[data_field] = param_values[data_field]
 
 # create training adapter env
-ta = TrainingAdapter(os.getenv('sriracha_provider'))
+ja = JobAdapter(os.getenv('sriracha_provider'))
 try:
-    entrypoint(ta)
-    ta.finish()
+    entrypoint(ja)
+    ja.finish()
 except TypeError:
     # TODO: TypeError should be only on entrypoint. Right now any TypeError will trigger
-    print('User provided function does not support TrainingAdapter')
+    print('User provided function does not support JobAdapter')
     entrypoint()

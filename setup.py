@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='baklava',
+    name='mlbaklava',
     use_scm_version={
-        'write_to': 'baklava/__version.py',
+        'write_to': 'mlbaklava/__version.py',
         'write_to_template': '__version__ = \'{version}\''
     },
     maintainer='Intuit ML Platform',
@@ -22,15 +22,14 @@ setup(
     ],
     entry_points={
         'distutils.commands': [
-            'processing = baklava.commands:Processing',
-            'train = baklava.commands:Train',
-            'execute = baklava.commands:Train',
-            'predict = baklava.commands:Predict',
-            'serve = baklava.commands:Predict',
+            'process = mlbaklava.commands:Process',
+            'train = mlbaklava.commands:Train',
+            'batch = mlbaklava.commands:Batch',
+            'deploy = mlbaklava.commands:Deploy',
         ],
         'distutils.setup_keywords': [
-            'python_version = baklava.commands:passthrough',
-            'dockerlines = baklava.commands:passthrough',
+            'python_version = mlbaklava.commands:passthrough',
+            'dockerlines = mlbaklava.commands:passthrough',
         ],
     }
 )

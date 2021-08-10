@@ -5,7 +5,7 @@ Functions dealing with specific environment configurations.
 """
 import sys
 
-from baklava import pypi
+from mlbaklava import pypi
 
 
 def get_environment_variables():

@@ -7,7 +7,7 @@ import pkg_resources
 import os
 import textwrap
 
-from baklava import environment, render
+from mlbaklava import environment, render
 
 def format_containerentrypoint(job_type, provider):
     """
@@ -121,14 +121,14 @@ def train(path, archive, entrypoint, requirements, python_version, dockerlines, 
     parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, 'train')
 
     # Render the result
-    src = pkg_resources.resource_filename('baklava.resources', 'train')
+    src = pkg_resources.resource_filename('mlbaklava.resources', 'train')
     files = render.copy(src, path, **parameters)
 
     # Return all distribution files
     files.append(os.path.join(path, archive))
     return files
 
-def processing(path, archive, entrypoint, requirements, python_version, dockerlines, provider):
+def process(path, archive, entrypoint, requirements, python_version, dockerlines, provider):
     """
     Create docker-specific training image artifacts
 
@@ -145,10 +145,10 @@ def processing(path, archive, entrypoint, requirements, python_version, dockerli
             training image.
     """
     # Common parameters
-    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, 'processing')
+    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, 'process')
 
     # Render the result
-    src = pkg_resources.resource_filename('baklava.resources', 'processing')
+    src = pkg_resources.resource_filename('mlbaklava.resources', 'process')
     files = render.copy(src, path, **parameters)
 
     # Return all distribution files
@@ -156,7 +156,7 @@ def processing(path, archive, entrypoint, requirements, python_version, dockerli
     return files
 
 
-def predict(path, archive, entrypoint, requirements, initializer, python_version, dockerlines, provider, workers=8):
+def deploy(path, archive, entrypoint, requirements, initializer, python_version, dockerlines, provider, workers=8):
     """
     Create docker-specific prediction image artifacts
 
@@ -187,7 +187,7 @@ def predict(path, archive, entrypoint, requirements, initializer, python_version
     )
 
     # Render the result
-    src = pkg_resources.resource_filename('baklava.resources', 'predict')
+    src = pkg_resources.resource_filename('mlbaklava.resources', 'deploy')
     files = render.copy(src, path, **parameters)
 
     # Return all distribution files

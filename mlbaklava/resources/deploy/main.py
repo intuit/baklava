@@ -14,13 +14,13 @@ import psutil
 from flask import Flask, request
 import gunicorn.app.base
 
-from mlsriracha.predict import PredictAdapter
+from mlsriracha.deploy import DeployAdapter
 
 # ------------------------------------------------------------------------------
 # Logging
 # ------------------------------------------------------------------------------
 
-logger = logging.getLogger('baklava')
+logger = logging.getLogger('mlbaklava')
 logger.addHandler(logging.NullHandler())
 
 
@@ -137,11 +137,11 @@ def application(func):
             data = request.get_data()  # type: bytes
 
         # Create prediction adapter
-        pa = PredictAdapter(os.getenv('sriracha_provider'))
+        da = DeployAdapter(os.getenv('sriracha_provider'))
 
         # Execute lambda
         try:
-            result = func(pa, data)
+            result = func(da, data)
         except TypeError:
             # print('User provided function does not support PredictAdapter')
             result = func(data)
