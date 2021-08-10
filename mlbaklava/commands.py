@@ -8,7 +8,7 @@ distributions.
 from distutils.core import Command
 import os
 
-from baklava import images, entrypoint, distribution
+from mlbaklava import images, entrypoint, distribution
 
 
 class Docker(Command):
@@ -87,7 +87,7 @@ class Train(Docker):
         # Get the entrypoint
         entry = entrypoint.get(
             entry=self.distribution.entry_points,
-            key='baklava.train',
+            key='mlbaklava.train',
             name=self.entrypoint
         )
 
@@ -121,7 +121,7 @@ class Train(Docker):
 
         self.build(artifacts, entry, directory)
 
-class Processing(Docker):
+class Process(Docker):
     description = 'create a docker image for local processing'
     user_options = [
 
@@ -161,7 +161,7 @@ class Processing(Docker):
         # Get the entrypoint
         entry = entrypoint.get(
             entry=self.distribution.entry_points,
-            key='baklava.processing',
+            key='mlbaklava.processing',
             name=self.entrypoint
         )
 
@@ -196,7 +196,7 @@ class Processing(Docker):
         self.build(artifacts, entry, directory)
 
 
-class Predict(Docker):
+class Deploy(Docker):
     description = 'create a docker image for local prediction'
     user_options = [
 
@@ -238,17 +238,17 @@ class Predict(Docker):
 
         # Get the initializer
         initializer = (None, None, None)
-        if self.initializer or 'baklava.initialize' in self.distribution.entry_points:
+        if self.initializer or 'mlbaklava.initialize' in self.distribution.entry_points:
             initializer = entrypoint.get(
                 entry=self.distribution.entry_points,
-                key='baklava.initialize',
+                key='mlbaklava.initialize',
                 name=self.initializer
             )
 
         # Get the entrypoint
         entry = entrypoint.get(
             entry=self.distribution.entry_points,
-            key='baklava.predict',
+            key='mlbaklava.deploy',
             name=self.entrypoint
         )
 
@@ -270,7 +270,7 @@ class Predict(Docker):
         dockerlines = self.distribution.dockerlines
 
         # Build docker distribution files
-        artifacts = distribution.predict(
+        artifacts = distribution.deploy(
             path=directory,
             archive=archive,
             entrypoint=entry,

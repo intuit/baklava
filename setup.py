@@ -6,12 +6,12 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='baklava',
+    name='mlbaklava',
     long_description=long_description,
     long_description_content_type='text/markdown',
     use_scm_version={
         'local_scheme': 'no-local-version',
-        'write_to': 'baklava/__version.py',
+        'write_to': 'mlbaklava/__version.py',
         'write_to_template': '__version__ = \'{version}\''
     },
     maintainer='Intuit ML Platform',
@@ -29,15 +29,14 @@ setup(
     ],
     entry_points={
         'distutils.commands': [
-            'processing = baklava.commands:Processing',
-            'train = baklava.commands:Train',
-            'execute = baklava.commands:Train',
-            'predict = baklava.commands:Predict',
-            'serve = baklava.commands:Predict',
+            'process = mlbaklava.commands:Process',
+            'train = mlbaklava.commands:Train',
+            'batch = mlbaklava.commands:Batch',
+            'deploy = mlbaklava.commands:Deploy',
         ],
         'distutils.setup_keywords': [
-            'python_version = baklava.commands:passthrough',
-            'dockerlines = baklava.commands:passthrough',
+            'python_version = mlbaklava.commands:passthrough',
+            'dockerlines = mlbaklava.commands:passthrough',
         ],
     }
 )
