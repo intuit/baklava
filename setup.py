@@ -4,6 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='baklava',
     use_scm_version={
+        'local_scheme': 'no-local-version',
         'write_to': 'baklava/__version.py',
         'write_to_template': '__version__ = \'{version}\''
     },
