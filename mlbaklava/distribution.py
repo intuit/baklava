@@ -7,8 +7,27 @@ import pkg_resources
 import os
 import textwrap
 
-from baklava import environment, render
+from mlbaklava import environment, render
 
+def format_containerentrypoint(job_type, provider):
+    """
+    Ensures containter entyrpoint is properly assigned. If this is running on Azure ML
+    the container entrypoint is removed.
+
+    Arguments:
+        dockerlines (Union[str, list[str]]): The dockerlines provided by the
+            python distribution setup file.
+
+    Returns:
+        dockerlines (str): The block of dockerlines to insert into the template
+    """
+
+    if job_type == 'train' and provider == 'azureml':
+        print('Swapping container entrypoint for AzureML')
+        return ""
+
+    else:
+        return 'ENTRYPOINT ["python", "/opt/main.py"]'
 
 def format_dockerlines(dockerlines):
     """
@@ -52,7 +71,7 @@ def format_entrypoints(entrypoint, alias):
     return 'from {package} import {func} as {alias}'.format(package=package, func=func, alias=alias)
 
 
-def build_parameters(archive, entrypoint, requirements, python_version, dockerlines):
+def build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, job_type):
 
     # Load PyPI environment
     env = environment.get_environment_variables()
@@ -61,8 +80,12 @@ def build_parameters(archive, entrypoint, requirements, python_version, dockerli
     if python_version is None:
         python_version = environment.get_python_version()
 
+    # Make sure to generate the rgiht containerentrypoint
+    containerentrypoint = format_containerentrypoint(job_type=job_type, provider=provider)
+
     # Make sure dockerlines are properly formatted
     dockerlines = format_dockerlines(dockerlines)
+    requirements.append("mlsriracha>=0.0.1")
     requirements = format_requirements(requirements)
     entrypoint = format_entrypoints(entrypoint, 'entrypoint')
 
@@ -73,11 +96,12 @@ def build_parameters(archive, entrypoint, requirements, python_version, dockerli
         requirements=requirements,
         dockerlines=dockerlines,
         entrypoint=entrypoint,
+        containerentrypoint=containerentrypoint,
         **env
     )
 
 
-def train(path, archive, entrypoint, requirements, python_version, dockerlines):
+def train(path, archive, entrypoint, requirements, python_version, dockerlines, provider):
     """
     Create docker-specific training image artifacts
 
@@ -94,10 +118,37 @@ def train(path, archive, entrypoint, requirements, python_version, dockerlines):
             training image.
     """
     # Common parameters
-    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines)
+    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, 'train')
 
     # Render the result
-    src = pkg_resources.resource_filename('baklava.resources', 'train')
+    src = pkg_resources.resource_filename('mlbaklava.resources', 'train')
+    files = render.copy(src, path, **parameters)
+
+    # Return all distribution files
+    files.append(os.path.join(path, archive))
+    return files
+
+def process(path, archive, entrypoint, requirements, python_version, dockerlines, provider):
+    """
+    Create docker-specific training image artifacts
+
+    Args:
+        path (str): The directory to the distribution path to save artifacts to
+        archive (str): The path to the source distribution
+        entrypoint (str): The package entrypoint
+        requirements (list[str]): The list of package requirements
+        python_version (str): The specific version of python to use
+        dockerlines (Union[str, list[str]]): Dockerlines provided by setup file
+
+    Returns:
+        artifacts (list[str]): The collection of artifacts used to create a
+            training image.
+    """
+    # Common parameters
+    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, 'process')
+
+    # Render the result
+    src = pkg_resources.resource_filename('mlbaklava.resources', 'process')
     files = render.copy(src, path, **parameters)
 
     # Return all distribution files
@@ -105,7 +156,7 @@ def train(path, archive, entrypoint, requirements, python_version, dockerlines):
     return files
 
 
-def predict(path, archive, entrypoint, requirements, initializer, python_version, dockerlines, workers=8):
+def deploy(path, archive, entrypoint, requirements, initializer, python_version, dockerlines, provider, workers=8):
     """
     Create docker-specific prediction image artifacts
 
@@ -125,7 +176,7 @@ def predict(path, archive, entrypoint, requirements, initializer, python_version
     """
 
     # Common parameters
-    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines)
+    parameters = build_parameters(archive, entrypoint, requirements, python_version, dockerlines, provider, 'predict')
 
     # Update parameters with options
     initializer = format_entrypoints(initializer, 'initializer')
@@ -136,7 +187,7 @@ def predict(path, archive, entrypoint, requirements, initializer, python_version
     )
 
     # Render the result
-    src = pkg_resources.resource_filename('baklava.resources', 'predict')
+    src = pkg_resources.resource_filename('mlbaklava.resources', 'deploy')
     files = render.copy(src, path, **parameters)
 
     # Return all distribution files

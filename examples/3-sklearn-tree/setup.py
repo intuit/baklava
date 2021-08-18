@@ -10,6 +10,10 @@ setup(
         'pandas',
         'scipy',
     ],
+    dockerlines=[
+        'COPY /mlctlsriracha-0.0.11.tar.gz /opt/mlctlsriracha-0.0.11.tar.gz',
+        'RUN pip install /opt/mlctlsriracha-0.0.11.tar.gz'
+    ],
     python_version='3.6',
     entry_points={
         'baklava.train': [

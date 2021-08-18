@@ -43,6 +43,20 @@ def run(path, cmd, args, stdout=None, stderr=None):
     process.wait()
     return process
 
+def process(path=os.getcwd(), args=None):
+    """
+    Build a training container for a python package.
+
+    Arguments:
+        path (str): The path where the package directory and :literal:`setup.py`
+            are located.
+        args (list[str]): The arguments to pass to the train command. By
+            default the system arguments are used.
+
+    Returns:
+        code (int): The process return code
+    """
+    return run(path, 'process', args).returncode
 
 def train(path=os.getcwd(), args=None):
     """
@@ -60,7 +74,7 @@ def train(path=os.getcwd(), args=None):
     return run(path, 'train', args).returncode
 
 
-def predict(path=os.getcwd(), args=None):
+def deploy(path=os.getcwd(), args=None):
     """
     Build a prediction container for a python package.
 
@@ -73,4 +87,4 @@ def predict(path=os.getcwd(), args=None):
     Returns:
         code (int): The process return code
     """
-    return run(path, 'predict', args).returncode
+    return run(path, 'deploy', args).returncode

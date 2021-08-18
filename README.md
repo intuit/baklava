@@ -1,8 +1,8 @@
 <p align="center">
- <img src=".github/assets/images/baklava-logo.png">
+ <img src=".github/assets/images/mlbaklava-logo.png">
 </p>
 
-<h1 align="center">Baklava</h1>
+<h1 align="center">mlbaklava</h1>
 
 This is a package for building python based Machine Learning models into docker images, that can be deployed directly into AWS SageMaker.
 
@@ -16,19 +16,19 @@ distribution (`sdist`) by installing the built package artifact
 installed to the Docker image, it allows the user to configure the image
 for the purposes of model training and prediction.
 
-The name was chosen because [baklava](https://en.wikipedia.org/wiki/Baklava) consists of small pieces and layers, like we put technologies together in form of many layers to create Docker images.
+The name was chosen because [mlbaklava](https://en.wikipedia.org/wiki/mlbaklava) consists of small pieces and layers, like we put technologies together in form of many layers to create Docker images.
 
 ## Installation
 
 Install [docker](https://www.docker.com/) and then install the package:
 
 ```
-pip install baklava
+pip install mlbaklava
 ```
 
 ## Features
 
-Installing the `baklava` package automatically registers
+Installing the `mlbaklava` package automatically registers
 extensions to `setuptools`. New features are added to build python
 distributions into docker images.
 
@@ -60,7 +60,7 @@ New **setup keywords** are also registered with setuptools (similar to
 * `python_version`: Specify the version of python to build the docker image for
 * `dockerlines`: Add docker commands to your resulting `Dockerfile`
 
-This package also defines a [Python API](baklava/api.py) to perform 
+This package also defines a [Python API](mlbaklava/api.py) to perform 
 the same actions as the setuptools extension.
 
 ## Usage
@@ -79,7 +79,7 @@ def my_training_function():
     pass
 ```
 
-The `setup.py` must include a `baklava.train` entrypoint which
+The `setup.py` must include a `mlbaklava.train` entrypoint which
 points to this function. The entrypoint is the full module path to the
 defined python function. An example of a `setup.py` script with a valid
 training entrypoint would  look like the following:
@@ -93,7 +93,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={
-        'baklava.train': [
+        'mlbaklava.train': [
             'my_entrypoint = example.main:my_training_function',
         ],
     }
@@ -133,7 +133,7 @@ def my_hosted_function(payload):
     return {}
 ```
 
-The `setup.py` must include a `baklava.predict` entrypoint
+The `setup.py` must include a `mlbaklava.predict` entrypoint
 which points to this function. The entrypoint is the full module path to
 the defined python function. An example of a `setup.py` script with a
 valid prediction entrypoint would  look like the following:
@@ -147,7 +147,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={
-        'baklava.predict': [
+        'mlbaklava.predict': [
             'my_entrypoint = example.main:my_hosted_function',
         ]
     }
@@ -190,7 +190,7 @@ def my_init_function():
     return 1, 2, 3
 ```
 
-The `setup.py` must include a `baklava.initialize` entrypoint
+The `setup.py` must include a `mlbaklava.initialize` entrypoint
 which points to this function. The entrypoint is the full module path to
 the defined python function. An example of a `setup.py` script with a
 valid prediction initialization entrypoint would  look like the
@@ -207,10 +207,10 @@ setup(
 
     # Notice that we have an initializer AND a predict function
     entry_points={
-        'baklava.predict': [
+        'mlbaklava.predict': [
             'my_entrypoint = example.main:my_hosted_function',
         ]
-        'baklava.initialize': [
+        'mlbaklava.initialize': [
             'my_initializer = example.main:my_init_function',
         ]
     }
@@ -256,13 +256,13 @@ setup(
 
     # The predict and train entrypoints create distinct images
     entry_points={
-        'baklava.train': [
+        'mlbaklava.train': [
             'my_train_entrypoint = example.main:my_training_function',
         ],
-        'baklava.predict': [
+        'mlbaklava.predict': [
             'my_predict_entrypoint = example.main:my_hosted_function',
         ]
-        'baklava.initialize': [
+        'mlbaklava.initialize': [
             'my_initializer = example.main:my_init_function',
         ]
     }
@@ -278,9 +278,9 @@ python setup.py train
 ```
 
 # Community
-Engage with the Baklava + MLCTL community on Slack at:
+Engage with the mlbaklava + MLCTL community on Slack at:
 
 [https://mlctl.slack.com/](https://mlctl.slack.com/)
 
 # Contributing
-For information on how to contribute to `baklava`, please read through the [contributing guidelines](./.github/CONTRIBUTING.md).
+For information on how to contribute to `mlbaklava`, please read through the [contributing guidelines](./.github/CONTRIBUTING.md).

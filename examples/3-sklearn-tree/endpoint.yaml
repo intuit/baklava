@@ -1,0 +1,43 @@
+# yaml-language-server: $schema: https://azuremlsdk2.blob.core.windows.net/latest/managedOnlineEndpoint.schema.json
+name: sklearn-endpoint
+type: online
+auth_mode: key
+traffic:
+  sklearn: 100
+
+deployments:
+  - name: sklearn
+    model:
+      name: sklearn_model6
+      version: 1
+      # path: https://mlctldata.blob.core.windows.net/modelartifact/model.pkl
+      local_path: ./data/model/model.pkl
+    code_configuration:
+      code: 
+        local_path: ./sklearn_tree/
+      scoring_script: predict.py
+    environment_variables:
+      # https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-custom-container#locating-the-mounted-model
+      AZUREML_MODEL_DIR: /var/azureml-app/azureml-models/sklearn_model6/1
+      sriracha_provider: azureml
+    environment:
+      name: sklearn
+      version: 1
+      docker:
+        image: mlctl.azurecr.io/mlctl/predict-image:latest
+      inference_config:
+        liveness_route:
+          port: 8080
+          path: /ping
+        readiness_route:
+          port: 8080
+          path: /ping
+        scoring_route:
+          port: 8080
+          path: /invocations
+    instance_type: Standard_DS2_v2
+    scale_settings:
+      scale_type: manual
+      instance_count: 1
+      min_instances: 1
+      max_instances: 1

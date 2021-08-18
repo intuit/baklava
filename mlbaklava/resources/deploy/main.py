@@ -14,12 +14,13 @@ import psutil
 from flask import Flask, request
 import gunicorn.app.base
 
+from mlsriracha.deploy import DeployAdapter
 
 # ------------------------------------------------------------------------------
 # Logging
 # ------------------------------------------------------------------------------
 
-logger = logging.getLogger('baklava')
+logger = logging.getLogger('mlbaklava')
 logger.addHandler(logging.NullHandler())
 
 
@@ -69,7 +70,7 @@ def application(func):
     else:
         spec = inspect.getfullargspec(func)
 
-    if len(spec.args) != 1:
+    if len(spec.args) != 2:
         raise ValueError(
             'Expected method to have exactly 1 argument, got {} arguments: {}'
             .format(len(spec.args), spec.args)
@@ -130,13 +131,20 @@ def application(func):
                           default: 1
         """
 
-        if request.content_type == 'application/json':
+        if request.is_json:
             data = request.get_json()  # type: dict[str, object]
         else:
             data = request.get_data()  # type: bytes
 
+        # Create prediction adapter
+        da = DeployAdapter(os.getenv('sriracha_provider'))
+
         # Execute lambda
-        result = func(data)
+        try:
+            result = func(da, data)
+        except TypeError:
+            # print('User provided function does not support PredictAdapter')
+            result = func(data)
         return result
 
     @app.route('/ping', methods=['GET'])

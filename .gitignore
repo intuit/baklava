@@ -3,7 +3,7 @@
 .pytest_cache/
 .tox/
 id.txt
-baklava/__version.py
+mlbaklava/__version.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
