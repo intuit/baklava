@@ -7,8 +7,10 @@ on: [push]
 
 jobs:    
   build:
-    runs-on: fkrull/multi-python
-
+    runs-on: ubuntu-latest
+      container:
+        image: fkrull/multi-python:latest
+   
     env:
       AWS_DEFAULT_REGION: us-west-2
 
