@@ -161,7 +161,7 @@ class Process(Docker):
         # Get the entrypoint
         entry = entrypoint.get(
             entry=self.distribution.entry_points,
-            key='mlbaklava.processing',
+            key='mlbaklava.process',
             name=self.entrypoint
         )
 
@@ -183,7 +183,7 @@ class Process(Docker):
         dockerlines = self.distribution.dockerlines
 
         # Build docker distribution files
-        artifacts = distribution.processing(
+        artifacts = distribution.process(
             path=directory,
             archive=archive,
             entrypoint=entry,

@@ -1,7 +1,7 @@
 $entrypoint
 import argparse
 import os
-from mlsriracha.process import ProcessAdapter
+from mlsriracha.process import JobAdapter
 
 print('Starting mlctl container')
 
