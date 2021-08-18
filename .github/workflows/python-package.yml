@@ -8,8 +8,9 @@ on: [push]
 jobs:    
   build:
     runs-on: ubuntu-latest
-      container:
-        image: fkrull/multi-python:latest
+    container:
+      image: fkrull/multi-python:latest
+        
    
     env:
       AWS_DEFAULT_REGION: us-west-2
