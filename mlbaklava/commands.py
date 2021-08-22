@@ -183,11 +183,7 @@ class Process(Docker):
         dockerlines = self.distribution.dockerlines
 
         # Build docker distribution files
-<<<<<<< HEAD:mlbaklava/commands.py
         artifacts = distribution.process(
-=======
-        artifacts = distribution.processing(
->>>>>>> c2a48febc82dbf6a0023b94eb84c20919db4a3c6:baklava/commands.py
             path=directory,
             archive=archive,
             entrypoint=entry,
